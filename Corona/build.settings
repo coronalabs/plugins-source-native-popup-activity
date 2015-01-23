@@ -1,0 +1,34 @@
+settings =
+{
+	orientation = 
+	{
+		default = "portrait", 
+		supported = { "portrait", },
+	},
+
+	iphone =
+	{
+		plist =
+		{
+			-- UIApplicationExitsOnSuspend = true, -- default is false
+			CFBundleIconFile = "Icon.png",
+			CFBundleIconFiles =
+			{
+				"Icon.png", 
+				"Icon@2x.png", 
+				"Icon-72.png", 
+			},
+
+		},
+	},
+	
+	plugins =
+	{
+		-- key is the name passed to Lua's 'require()'
+		["CoronaProvider.native.popup.activity"] =
+		{
+			-- required
+			publisherId = "com.coronalabs",
+		},
+	},
+}
