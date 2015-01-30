@@ -27,8 +27,8 @@ settings =
 		-- key is the name passed to Lua's 'require()'
 		["CoronaProvider.native.popup.activity"] =
 		{
-			-- required
 			publisherId = "com.coronalabs",
+			supportedPlatforms = { iphone=true, ["iphone-sim"]=true },
 		},
 	},
 }

@@ -53,28 +53,26 @@ The following are valid types and an explanation of the expected value:
 * `"string"` The value should be a [string][api.type.String]. It will be converted to a NSString.
 * `"url"` The value should be a [string][api.type.String]. It will be converted to a NSURL.
 * `"image"` The corresponding value is a Lua table `{ baseDir=, filename= }` pointing to the image file you wish to post. It will be converted to an UIImage.
-* `"color"` The corresponding value is an array of color channels (see [Paint][api.type.Paint]). It will be converted to an UIColor.
-* `"dictionary"` The corresponding value is a [table][api.type.Table]. It will be converted to a NSDictionary.
 
 
 ## Supported Activities
 
 This plugin supports the following activity string values (each string, corresponding to a built-in activity on iOS):
 
-* `"postToFacebook"` (UIActivityTypePostToFacebook)
-* `"postToTwitter"` (UIActivityTypePostToTwitter)
-* `"postToWeibo"` (UIActivityTypePostToWeibo)
-* `"message"` (UIActivityTypeMessage)
-* `"mail"` (UIActivityTypeMail)
-* `"print"` (UIActivityTypePrint)
-* `"copyToPasteboard"` (UIActivityTypeCopyToPasteboard)
-* `"assignToContact"` (UIActivityTypeAssignToContact)
-* `"saveToCameraRoll"` (UIActivityTypeSaveToCameraRoll)
-* `"addToReadingList"` (UIActivityTypeAddToReadingList)
-* `"postToFlickr"` (UIActivityTypePostToFlickr)
-* `"postToVimeo"` (UIActivityTypePostToVimeo)
-* `"postToTencentWeibo"` (UIActivityTypePostToTencentWeibo)
-* `"airDrop"` (UIActivityTypeAirDrop)
+* `"UIActivityTypePostToFacebook"` (UIActivityTypePostToFacebook)
+* `"UIActivityTypePostToTwitter"` (UIActivityTypePostToTwitter)
+* `"UIActivityTypePostToWeibo"` (UIActivityTypePostToWeibo)
+* `"UIActivityTypeMessage"` (UIActivityTypeMessage)
+* `"UIActivityTypeMail"` (UIActivityTypeMail)
+* `"UIActivityTypePrint"` (UIActivityTypePrint)
+* `"UIActivityTypeCopyToPasteboard"` (UIActivityTypeCopyToPasteboard)
+* `"UIActivityTypeAssignToContact"` (UIActivityTypeAssignToContact)
+* `"UIActivityTypeSaveToCameraRoll"` (UIActivityTypeSaveToCameraRoll)
+* `"UIActivityTypeAddToReadingList"` (UIActivityTypeAddToReadingList)
+* `"UIActivityTypePostToFlickr"` (UIActivityTypePostToFlickr)
+* `"UIActivityTypePostToVimeo"` (UIActivityTypePostToVimeo)
+* `"UIActivityTypePostToTencentWeibo"` (UIActivityTypePostToTencentWeibo)
+* `"UIActivityTypeAirDrop"` (UIActivityTypeAirDrop)
 
 You should consult the [iOS UIActivity API Docs](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivity_Class/index.html#//apple_ref/doc/constant_group/Built_in_Activity_Types) for valid item types the can be used for the above built-in activities.
 

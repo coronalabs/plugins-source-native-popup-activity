@@ -141,76 +141,13 @@ IOSActivityNativePopupProvider::showPopup( lua_State *L )
 		if ( lua_istable( L, 2 ) )
 		{
 			// options.items (required)
-			NSMutableArray *activityItems = [NSMutableArray array];
-
 			lua_getfield( L, -1, "items" );
-			if ( lua_istable( L, -1 ) )
-			{
-				int index = lua_gettop( L );
-			
-				// Lua is 1-based
-				for ( int i = 1, iLen = (int)lua_objlen( L, -1 ); i <= iLen; i++ )
-				{
-					lua_rawgeti( L, index, i );
-					if ( lua_istable( L, -1 ) )
-					{
-						int itemIndex = lua_gettop( L );
-
-						lua_getfield( L, itemIndex, "type" );
-						const char *itemType = lua_tostring( L, -1 );
-						if ( itemType )
-						{
-							id value = IOSActivityPluginUtils::ToItemValue( L, itemIndex, itemType );
-							if ( value )
-							{
-								[activityItems addObject:value];
-							}
-							else
-							{
-								CORONA_LOG_WARNING( "[options.items] The item type(%s) at index(%d) is not supported.", itemType, i );
-							}
-						}
-						else
-						{
-							CORONA_LOG_WARNING( "[options.items] The item at index(%d) is missing the 'type' property.", i );
-						}
-						lua_pop( L, 1 ); // pop type
-					}
-					else
-					{
-						CORONA_LOG_WARNING( "[options.items] Cannot process item at index (%d). It's a %s instead of a table.", i, lua_typename( L, lua_type( L, -1 ) ) );
-					}
-					lua_pop( L, 1 ); // pop item element
-				}
-			}
-			lua_pop( L, 1 ); // pop 'items' array
+			NSArray *activityItems = IOSActivityPluginUtils::ToItemArray( L, -1, "options.items" );
+			lua_pop( L, 1 );
 
 			// options.excludedActivities (optional)
-			NSMutableArray *excludedActivities = nil;
-
 			lua_getfield( L, -1, "excludedActivities" );
-			if ( lua_istable( L, -1 ) )
-			{
-				int index = lua_gettop( L );
-
-				excludedActivities = [NSMutableArray array];
-
-				// Lua is 1-based
-				for ( int i = 1, iLen = (int)lua_objlen( L, -1 ); i <= iLen; i++ )
-				{
-					lua_rawgeti( L, index, i );
-					NSString *activityType = IOSActivityPluginUtils::ToUIActivityType( L, -1 );
-					if ( activityType )
-					{
-						[excludedActivities addObject:activityType];
-					}
-					else
-					{
-						CORONA_LOG_WARNING( "[options.excludedActivities] Item at index (%d) was not a valid activity string.", i );
-					}
-					lua_pop( L, 1 ); // pop
-				}
-			}
+			NSArray *excludedActivities = IOSActivityPluginUtils::ToUIActivityTypeArray( L, -1, "options.excludedActivities" );
 			lua_pop( L, 1 );
 
 			// options.listener (optional)
@@ -230,8 +167,10 @@ IOSActivityNativePopupProvider::showPopup( lua_State *L )
 			{
 				handler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError)
 				{
+					const char *luaActivityType = IOSActivityPluginUtils::ToLuaActivityType( activityType );
+
 					// Create event and invoke listener
-					IOSActivityPluginUtils::PushEvent( L, activityType, completed, returnedItems, activityError ); // push event
+					IOSActivityPluginUtils::PushEvent( L, luaActivityType, completed, returnedItems, activityError ); // push event
 					Lua::DispatchEvent( L, listenerRef, 0 );
 
 					// Free native reference to listener
@@ -257,7 +196,8 @@ IOSActivityNativePopupProvider::PresentController(
 	NSArray *excludedActivities,
 	UIActivityViewControllerCompletionWithItemsHandler handler )
 {
-	UIActivityViewController *controller = [[[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil] autorelease];
+	UIActivityViewController *controller = [[[UIActivityViewController alloc] 
+		initWithActivityItems:items applicationActivities:nil] autorelease];
 	controller.excludedActivityTypes = excludedActivities;
 
 	if ( handler )

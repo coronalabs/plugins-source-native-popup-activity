@@ -27,7 +27,7 @@ popd > /dev/null
 # Build plugin
 # 
 CONFIG=Release
-TARGET=native-popup-social
+TARGET=native-popup-activity
 BINARY=lib$TARGET.a
 OUTPUT_DIR=$path/../../build/$TARGET/ios
 

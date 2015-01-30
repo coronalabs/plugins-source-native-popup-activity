@@ -89,16 +89,6 @@ local itemsByDataType =
 		{ type = "url", value = "http://www.coronalabs.com" },
 		{ type = "url", value = "http://docs.coronalabs.com" },
 	},
-	["dictionary"] = {
-		type = "dictionary",
-		value = {
-			location = "Corona Labs",
-			address = {
-				city = "Palo Alto",
-				state = "California",
-			},
-		}
-	},
 }
 
 -- Executed upon touching & releasing a widget button
@@ -118,6 +108,7 @@ local function onButtonReleased( event )
 		native.showPopup( popupName,
 		{
 			items = itemsByDataType[dataType],
+			-- excludedActivities = { "UIActivityTypeCopyToPasteboard", },
 			listener = listener,
 		})
 	else
