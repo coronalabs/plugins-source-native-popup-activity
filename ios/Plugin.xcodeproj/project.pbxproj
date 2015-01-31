@@ -29,7 +29,7 @@
 		A47AB0E41A71ED00001D3FFA /* IOSActivityNativePopupProvider+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "IOSActivityNativePopupProvider+Private.h"; path = "Plugin/IOSActivityNativePopupProvider+Private.h"; sourceTree = "<group>"; };
 		A487BBE61680213E00047EB2 /* IOSActivityNativePopupProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSActivityNativePopupProvider.h; path = Plugin/IOSActivityNativePopupProvider.h; sourceTree = "<group>"; };
 		A487BBE71680213E00047EB2 /* IOSActivityNativePopupProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSActivityNativePopupProvider.mm; path = Plugin/IOSActivityNativePopupProvider.mm; sourceTree = "<group>"; };
-		A4E253B6166D6FB300DCDC2C /* libnative-popup-social.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libnative-popup-social.a"; path = "libnative-popup-activity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4E253B6166D6FB300DCDC2C /* libnative-popup-activity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libnative-popup-activity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 		A484111A15114F700074BD57 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A4E253B6166D6FB300DCDC2C /* libnative-popup-social.a */,
+				A4E253B6166D6FB300DCDC2C /* libnative-popup-activity.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,7 +88,7 @@
 			);
 			name = "native-popup-activity";
 			productName = plugin_library;
-			productReference = A4E253B6166D6FB300DCDC2C /* libnative-popup-social.a */;
+			productReference = A4E253B6166D6FB300DCDC2C /* libnative-popup-activity.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
