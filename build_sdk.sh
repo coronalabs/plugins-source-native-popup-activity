@@ -4,8 +4,7 @@ path=`dirname $0`
 
 BUILD_DIR=$1
 PLUGIN_NAME=$2
-PLUGIN_NAME_BASE=`echo -n "$PLUGIN_NAME" | sed -E 's/plugin_(.*)/\1/'`
-PROVIDER_PREFIX=CoronaProvider_native_popup_
+PLUGIN_NAME_LUA=CoronaProvider_${PLUGIN_NAME//-/_}
 PRODUCT=sdk
 
 #
@@ -89,6 +88,7 @@ cd "$path/ios"
 	checkError
 
 	cp -rv "$OUTPUT_DIR_IOS/" "$OUTPUT_DIR_IOS_SIM"
+	checkError
 
 	# Remove i386 from ios build
 	find "$OUTPUT_DIR_IOS" -name \*.a | xargs -n 1 -I % lipo -remove i386 % -output %
@@ -106,7 +106,7 @@ cd -
 echo "------------------------------------------------------------------------"
 echo "[mac]"
 cd "$path/shared"
-	cp "$path/shared/${PROVIDER_PREFIX}${PLUGIN_NAME_BASE}.lua" "$OUTPUT_DIR_MAC"
+	cp "$path/shared/${PLUGIN_NAME_LUA}.lua" "$OUTPUT_DIR_MAC"
 	checkError
 cd -
 
@@ -121,7 +121,7 @@ cd -
 echo "------------------------------------------------------------------------"
 echo "[win32]"
 cd "$path/shared"
-	cp "$path/shared/${PROVIDER_PREFIX}${PLUGIN_NAME_BASE}.lua" "$OUTPUT_DIR_WIN32"
+	cp "$path/shared/${PLUGIN_NAME_LUA}.lua" "$OUTPUT_DIR_WIN32"
 	checkError
 cd -
 

@@ -2,7 +2,7 @@
 
 path=`dirname $0`
 
-PLUGIN_NAME=plugin_activity
+PLUGIN_NAME=native-popup-activity
 
 #
 # Checks exit value for error
