@@ -125,10 +125,10 @@ cd "$path/shared"
 	checkError
 cd -
 
-echo "------------------------------------------------------------------------"
-echo "[docs]"
-cp -vrf "$path/docs" "$OUTPUT_DIR_DOCS"
-checkError
+# echo "------------------------------------------------------------------------"
+# echo "[docs]"
+# cp -vrf "$path/docs" "$OUTPUT_DIR_DOCS"
+# checkError
 
 echo "------------------------------------------------------------------------"
 echo "[samples]"
