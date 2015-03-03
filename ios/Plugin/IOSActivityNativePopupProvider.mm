@@ -179,7 +179,7 @@ IOSActivityNativePopupProvider::showPopup( lua_State *L )
 			}
 
             // Intended to make it easy to pass origin=button.contentBounds
-            // (uses modified code from 
+            // (uses modified code from `media.selectPhoto()` in core engine
             UIPopoverArrowDirection direction = UIPopoverArrowDirectionAny;
             float xmin = NAN;
             float ymin = NAN;
