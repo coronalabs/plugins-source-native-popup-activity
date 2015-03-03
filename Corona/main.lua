@@ -110,6 +110,9 @@ local function onButtonReleased( event )
 			items = itemsByDataType[dataType],
 			-- excludedActivities = { "UIActivityTypeCopyToPasteboard", },
 			listener = listener,
+            -- this is used only for iPad, to show popover in proper position in relation to button
+            origin = event.target.contentBounds,
+            permittedArrowDirections = { "up", "left" } --possible entries "up", "down", "left", "right" or "any". Default is "any". Could be list, single entry or missing.
 		})
 	else
 		if isSimulator then

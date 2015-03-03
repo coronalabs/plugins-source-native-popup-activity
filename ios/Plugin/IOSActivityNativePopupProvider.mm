@@ -178,7 +178,117 @@ IOSActivityNativePopupProvider::showPopup( lua_State *L )
 				};
 			}
 
-			library.PresentController( L, activityItems, excludedActivities, handler );
+            // Intended to make it easy to pass origin=button.contentBounds
+            // (uses modified code from 
+            UIPopoverArrowDirection direction = UIPopoverArrowDirectionAny;
+            float xmin = NAN;
+            float ymin = NAN;
+            float xmax = NAN;
+            float ymax = NAN;
+
+            
+            lua_getfield( L, -1, "origin" );
+            if ( lua_type( L, -1) == LUA_TTABLE )
+            {
+                lua_getfield( L, -1, "xMin" );
+                if ( lua_type( L, -1) == LUA_TNUMBER )
+                {
+                    xmin = lua_tonumber( L, -1 );
+                }
+                lua_pop( L, 1 );
+                
+                lua_getfield( L, -1, "yMin" );
+                if ( lua_type( L, -1) == LUA_TNUMBER )
+                {
+                    ymin = lua_tonumber( L, -1 );
+                }
+                lua_pop( L, 1 );
+                
+                lua_getfield( L, -1, "xMax" );
+                if ( lua_type( L, -1) == LUA_TNUMBER )
+                {
+                    xmax = lua_tonumber( L, -1 );
+                }
+                lua_pop( L, 1 );
+                
+                lua_getfield( L, -1, "yMax" );
+                if ( lua_type( L, -1) == LUA_TNUMBER )
+                {
+                    ymax = lua_tonumber( L, -1 );
+                }
+                lua_pop( L, 1 );
+            }
+            lua_pop( L, 1 );
+            
+            lua_getfield( L, -1, "permittedArrowDirections" );
+            if ( lua_type( L, -1) == LUA_TNUMBER)
+            {
+                // Support backdoor integer in case users need to specify the undocumented value '0' for no arrow
+                direction = lua_tonumber( L, -1 );
+            }
+            else if ( lua_type( L, -1) == LUA_TSTRING )
+            {
+                if ( 0 == strcmp( "any", lua_tostring( L, -1 ) ) )
+                {
+                    direction = UIPopoverArrowDirectionAny;
+                }
+                else if( 0 == strcmp( "up", lua_tostring( L, -1 ) ) )
+                {
+                    direction = UIPopoverArrowDirectionUp;
+                }
+                else if( 0 == strcmp( "down", lua_tostring( L, -1 ) ) )
+                {
+                    direction = UIPopoverArrowDirectionDown;
+                }
+                else if( 0 == strcmp( "left", lua_tostring( L, -1 ) ) )
+                {
+                    direction = UIPopoverArrowDirectionLeft;
+                }
+                else if( 0 == strcmp( "right", lua_tostring( L, -1 ) ) )
+                {
+                    direction = UIPopoverArrowDirectionRight;
+                }
+            }
+            else if ( lua_type( L, -1) == LUA_TTABLE )
+            {
+                int max = lua_objlen( L, -1 );
+                // Make sure the table isn't empty.
+                if ( max > 0 )
+                {
+                    // We need to clear the the 'Any' direction set above.
+                    direction = 0;
+                    // Assumes an array of strings
+                    for ( int i = 1; i <= max; i++ )
+                    {
+                        lua_rawgeti( L, -1, i );
+                        
+                        if ( 0 == strcmp( "any", lua_tostring( L, -1 ) ) )
+                        {
+                            direction |= UIPopoverArrowDirectionAny;
+                        }
+                        else if( 0 == strcmp( "up", lua_tostring( L, -1 ) ) )
+                        {
+                            direction |= UIPopoverArrowDirectionUp;
+                        }
+                        else if( 0 == strcmp( "down", lua_tostring( L, -1 ) ) )
+                        {
+                            direction |= UIPopoverArrowDirectionDown;
+                        }
+                        else if( 0 == strcmp( "left", lua_tostring( L, -1 ) ) )
+                        {
+                            direction |= UIPopoverArrowDirectionLeft;
+                        }
+                        else if( 0 == strcmp( "right", lua_tostring( L, -1 ) ) )
+                        {
+                            direction |= UIPopoverArrowDirectionRight;
+                        }
+                        
+                        lua_pop( L, 1 );
+                    }
+                }
+            }
+            
+            library.PresentController( L, activityItems, excludedActivities, handler, xmin, ymin, xmax, ymax, direction );
 		}
 		else
 		{
@@ -194,7 +304,9 @@ IOSActivityNativePopupProvider::PresentController(
 	lua_State *L,
 	NSArray *items,
 	NSArray *excludedActivities,
-	UIActivityViewControllerCompletionWithItemsHandler handler )
+    UIActivityViewControllerCompletionWithItemsHandler handler,
+    float xmin, float ymin, float xmax, float ymax,
+    unsigned int direction )
 {
 	UIActivityViewController *controller = [[[UIActivityViewController alloc] 
 		initWithActivityItems:items applicationActivities:nil] autorelease];
@@ -202,27 +314,54 @@ IOSActivityNativePopupProvider::PresentController(
 
 	if ( handler )
 	{
-		if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1 )
+		if ( [controller respondsToSelector:@selector(completionWithItemsHandler)] )
 		{
-			// Handle backward compatibility for iOS 6
-			controller.completionHandler = ^(NSString *activityType, BOOL completed)
-			{
-				handler( activityType, completed, nil, nil );
-			};
+            // iOS 8 and later
+            controller.completionWithItemsHandler = handler;			
 		}
 		else
 		{
-			// iOS 8 and later
-			controller.completionWithItemsHandler = handler;
+            // Handle backward compatibility for iOS 6
+            controller.completionHandler = ^(NSString *activityType, BOOL completed)
+            {
+                handler( activityType, completed, nil, nil );
+            };
 		}
 	}
+    
+    if( UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone )
+    {
+        [GetAppViewController() presentViewController:controller animated:YES completion:nil];
+    }
+    else
+    {
+        UIView* view = [GetAppViewController() view];
+        UIPopoverController *popup = [[[UIPopoverController alloc] initWithContentViewController:controller] autorelease];
 
-	void (^completionHandler)() = ^()
-	{
-		// No-op
-	};
-
-	[GetAppViewController() presentViewController:controller animated:YES completion:completionHandler];
+        CGRect popover;
+        if ( xmin != xmin || ymin != ymin || xmax !=xmax || ymax != ymax )
+        {
+            //default to the middle-botom
+            popover.origin.x = view.frame.size.width*0.5;
+            popover.origin.y = view.frame.size.height;
+            popover.size.width = 0;
+            popover.size.height = 0;
+        }
+        else
+        {
+            //transform lua coordinates to device
+            id<CoronaRuntime> runtime = (id<CoronaRuntime>)CoronaLuaGetContext( L );
+            CGPoint min = [runtime coronaPointToUIKitPoint:CGPointMake(xmin, ymin)];
+            CGPoint max = [runtime coronaPointToUIKitPoint:CGPointMake(xmax, ymax)];
+            popover = CGRectMake( min.x, min.y, max.x-min.x, max.y-min.y );
+        }
+        
+        if ( direction == 0 )
+            direction = UIPopoverArrowDirectionAny;
+        
+        [popup presentPopoverFromRect:popover inView:view permittedArrowDirections:direction animated:YES];
+    }
+	
 }
 
 // ----------------------------------------------------------------------------
