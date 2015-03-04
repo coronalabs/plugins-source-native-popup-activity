@@ -53,8 +53,8 @@ class IOSActivityNativePopupProvider
 			NSArray *items,
 			NSArray *excludedActivities,
 			UIActivityViewControllerCompletionWithItemsHandler handler,
-            float xmin, float ymin, float xmax, float ymax,
-            unsigned int direction);
+				float xmin, float ymin, float xmax, float ymax,
+				unsigned int direction);
 
 	private:
 		UIViewController *fAppViewController;
