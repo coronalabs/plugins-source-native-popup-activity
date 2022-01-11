@@ -174,7 +174,9 @@ IOSActivityNativePopupProvider::showPopup( lua_State *L )
 					Lua::DispatchEvent( L, listenerRef, 0 );
 
 					// Free native reference to listener
-					Lua::DeleteRef( L, listenerRef );
+					if ( !activityType || completed ) {
+						Lua::DeleteRef( L, listenerRef );
+					}
 				};
 			}
 
