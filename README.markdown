@@ -1,5 +1,5 @@
 
-# This plugin were moved (here)[https://github.com/coronalabs/com.coronalabs-CoronaProvider.native.popup.activity]
+# This plugin were moved [here](https://github.com/coronalabs/com.coronalabs-CoronaProvider.native.popup.activity)
 -------
 
 # plugin.native-popup-activity
