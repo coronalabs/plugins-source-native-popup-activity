@@ -1,3 +1,7 @@
+
+# This plugin were moved (here)[https://github.com/coronalabs/com.coronalabs-CoronaProvider.native.popup.activity]
+-------
+
 # plugin.native-popup-activity
 
 The Activity plugin displays the activity popup window which corresponds to UIActivityViewController on iOS.
